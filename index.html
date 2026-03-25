@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nuestras acciones, el futuro del mañana | EcoKeepers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Outfit', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        eco: {
+                            dark: '#121212',
+                            light: '#f8f9fa',
+                            accent: '#4a5d23', 
+                            accentLight: '#6b8e23',
+                            alert: '#d9534f'  
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'blob': 'blob 7s infinite',
+                        'marquee': 'marquee 25s linear infinite',
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #121212;
+            overflow-x: hidden;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4a5d23, #6b8e23, #d9534f);
+            z-index: 100;
+            transition: width 0.2s ease-out;
+            box-shadow: 0 2px 10px rgba(74,93,35,0.5);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .image-container {
+            overflow: hidden;
+            border-radius: 1.5rem;
+            position: relative;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+        }
+        .image-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 1.5rem;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+            pointer-events: none;
+        }
+        .image-container img {
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .image-container:hover img {
+            transform: scale(1.08) rotate(1deg);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .glass-dark {
+            background: rgba(18, 18, 18, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .option-btn {
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+        .option-btn:active {
+            transform: scale(0.98);
+        }
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dotted-circle {
+            background-image: radial-gradient(#4a5d23 2px, transparent 2px);
+            background-size: 15px 15px;
+            opacity: 0.15;
+            border-radius: 50%;
+        }
+
+        .marquee-wrapper {
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+            gap: 2rem;
+        }
+        .marquee-content {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-around;
+            min-width: 100%;
+            gap: 2rem;
+            animation: scroll-marquee 20s linear infinite;
+        }
+        @keyframes scroll-marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(-100% - 2rem)); }
+        }
+
+        /* Tarjetas Flip para Mitos */
+        .flip-card {
+            background-color: transparent;
+            height: 300px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+        }
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        .flip-card-front {
+            background-color: #ffffff;
+            border: 2px solid #e5e7eb;
+            color: #121212;
+        }
+        .flip-card-back {
+            background-color: #121212;
+            color: #ffffff;
+            transform: rotateY(180deg);
+            border: 2px solid #d9534f;
+        }
+
+        /* Contadores numéricos */
+        .counter-box {
+            background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+            box-shadow: 10px 10px 20px #0a0a0a, -10px -10px 20px #2a2a2a;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-eco-accent selection:text-white">
+
+    <!-- Barra de progreso -->
+    <div id="progress-bar" style="width: 0%;"></div>
+
+    <!-- Navegación -->
+    <nav class="w-full py-3 px-4 md:px-12 flex justify-center items-center border-b border-gray-200/50 bg-eco-light/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="flex items-center gap-3 md:gap-4">
+            <img src="image_1d43de.jpg" alt="Logo de EcoKeepers" class="h-12 w-12 md:h-16 md:w-16 object-contain rounded-full shadow-md border-2 border-white" onerror="this.src='https://via.placeholder.com/150?text=Logo'">
+            <span class="font-display font-black text-xl md:text-2xl tracking-wide text-eco-dark">EcoKeepers</span>
+        </div>
+    </nav>
+
+    <!-- Héroe / Título Principal -->
+    <header class="relative w-full min-h-[95vh] flex flex-col items-center justify-center overflow-hidden py-20 md:py-32">
+        
+        <!-- Elementos Decorativos Flotantes: Blobs y Geometría -->
+        <div class="absolute top-10 left-0 md:left-10 w-48 h-48 md:w-64 md:h-64 bg-eco-accent rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob pointer-events-none"></div>
+        <div class="absolute top-20 right-0 md:right-20 w-48 h-48 md:w-64 md:h-64 bg-green-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000 pointer-events-none"></div>
+        <div class="absolute -bottom-8 left-20 w-48 h-48 md:w-64 md:h-64 bg-eco-alert rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000 pointer-events-none"></div>
+        
+        <div class="absolute top-32 left-4 md:left-20 w-24 h-24 md:w-32 md:h-32 dotted-circle animate-float pointer-events-none"></div>
+        <svg class="absolute top-1/4 right-10 md:right-32 text-eco-accent opacity-20 w-12 h-12 md:w-16 md:h-16 animate-float-delayed transform rotate-45 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+
+        <!-- Imagen de fondo oscura -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <img id="img-fondo" src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&q=80&w=2000" alt="Fondo urbano" class="w-full h-full object-cover opacity-20" onerror="this.src='https://placehold.co/2000x1000/1a1a1a/4a5d23?text=FONDO'">
+            <div class="absolute inset-0 bg-gradient-to-b from-eco-light/80 via-eco-light/95 to-eco-light"></div>
+        </div>
+
+        <div class="relative z-10 w-full max-w-5xl mx-auto px-4 md:px-6 text-center reveal mt-10">
+            <!-- Etiqueta de Alerta -->
+            <div class="inline-flex items-center justify-center mb-6 md:mb-8 px-6 py-2 rounded-full border-2 border-eco-accent text-eco-accent bg-white/50 backdrop-blur-sm shadow-sm hover:scale-105 transition-transform">
+                <span class="inline-block w-2 h-2 rounded-full bg-eco-alert mr-3 animate-pulse-fast"></span>
+                <span class="text-xs md:text-sm font-bold uppercase tracking-widest">Alerta Generacional • 4to A Tributaria</span>
+            </div>
+            
+            <h1 class="font-display text-5xl sm:text-6xl md:text-8xl lg:text-[6.5rem] font-black text-eco-dark leading-[1] mb-6 tracking-tighter hover:scale-[1.02] transition-transform duration-500">
+                Nuestras acciones,<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-eco-accent via-green-700 to-eco-dark relative inline-block mt-2">
+                    nuestro colapso.
+                    <svg class="absolute w-full h-3 md:h-5 -bottom-1 md:-bottom-2 left-0 text-eco-accent/40" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+                </span>
+            </h1>
+            
+            <p class="text-base sm:text-lg md:text-2xl text-gray-800 font-medium max-w-3xl mx-auto mt-6 md:mt-10 leading-relaxed px-4 py-4 md:p-6 bg-white/30 backdrop-blur-sm rounded-2xl border border-white/50 shadow-sm text-center">
+                Olvida el típico sermón escolar del osito polar. Esto es crudo. Los adultos ya hicieron su desastre, pero nosotros seguimos sus pasos. Despierta.
+            </p>
+        </div>
+
+        <!-- Flecha indicadora -->
+        <div class="absolute bottom-6 md:bottom-10 flex flex-col items-center animate-bounce-slow text-eco-accent drop-shadow-md">
+            <svg class="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </header>
+
+    <!-- Cinta Animada (Marquee) Decorativa -->
+    <div class="w-full bg-eco-dark py-4 md:py-5 border-y-4 border-eco-accent transform -skew-y-2 z-20 relative shadow-2xl my-10 md:my-16">
+        <div class="marquee-wrapper font-display font-black text-xl md:text-3xl tracking-widest uppercase">
+            <div class="marquee-content items-center text-eco-accent">
+                <span>/// EL FUTURO ESTÁ EN TUS MANOS</span>
+                <span class="text-white">/// NO HAY PLANETA B</span>
+                <span class="text-eco-alert">/// DESPIERTA</span>
+                <span>/// EL FUTURO ESTÁ EN TUS MANOS</span>
+                <span class="text-white">/// NO HAY PLANETA B</span>
+                <span class="text-eco-alert">/// DESPIERTA</span>
+            </div>
+            <div class="marquee-content items-center text-eco-accent" aria-hidden="true">
+                <span>/// EL FUTURO ESTÁ EN TUS MANOS</span>
+                <span class="text-white">/// NO HAY PLANETA B</span>
+                <span class="text-eco-alert">/// DESPIERTA</span>
+                <span>/// EL FUTURO ESTÁ EN TUS MANOS</span>
+                <span class="text-white">/// NO HAY PLANETA B</span>
+                <span class="text-eco-alert">/// DESPIERTA</span>
+            </div>
+        </div>
+    </div>
+
+    <main class="w-full relative">
+        
+        <!-- Elemento decorativo lateral flotante desktop -->
+        <svg class="hidden lg:block absolute top-20 -left-20 text-eco-accent opacity-10 w-80 h-80 animate-float pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+
+        <div class="max-w-6xl mx-auto px-4 md:px-6 pt-10 pb-20">
+            <!-- Introducción Glassmorphism Brutal -->
+            <article class="glass-card p-6 md:p-12 rounded-3xl shadow-2xl border-t-8 border-eco-alert mx-auto max-w-4xl reveal relative z-20 mb-20 md:mb-32 transform hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute -top-6 md:-top-8 -right-2 md:-right-6 bg-eco-alert text-white p-3 md:p-5 rounded-full shadow-[0_10px_20px_rgba(217,83,79,0.4)]">
+                    <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+
+                <p class="text-gray-900 leading-relaxed font-sans text-lg md:text-2xl font-bold">
+                    Seamos directos: somos la generación con más "consciencia ecológica", pero consumimos peor que nuestros abuelos. La crisis no está a miles de kilómetros en un bloque de hielo derritiéndose; está en la funda de plástico de tu merienda, en la ropa barata que pides y en tu obsesión estúpida por tener el último teléfono. 
+                    <br><br>
+                    La física no perdona: <strong class="text-eco-alert bg-red-100 px-2 py-1 rounded">tu basura no desaparece mágicamente cuando la tiras al zafacón</strong>. Sobrevivirá a tus tataranietos. O cambiamos nosotros, o nos asfixiamos en nuestro propio ego.
+                </p>
+            </article>
+
+            <div class="text-center mb-12 md:mb-20 reveal relative">
+                <span class="uppercase tracking-widest text-eco-alert font-black text-xs md:text-sm mb-3 block animate-pulse">— LOS 7 PECADOS CAPITALES MODERNOS —</span>
+                <h2 class="font-display text-4xl md:text-6xl font-black text-eco-dark mb-4 tracking-tight">La realidad de lo que haces</h2>
+                <p class="text-gray-600 text-base md:text-xl font-medium bg-white/50 inline-block px-6 py-2 rounded-full border border-gray-200 shadow-sm">Mírate en el espejo. Así se ve tu día a día.</p>
+            </div>
+
+            <!-- Secciones con Imágenes Alternas -->
+            <div class="space-y-20 md:space-y-32 mb-20 md:mb-32 relative z-10">
+                
+                <!-- Vector 1: Digital -->
+                <section class="flex flex-col md:flex-row items-center gap-8 md:gap-16 reveal group">
+                    <div class="w-full md:w-1/2 relative order-1 md:order-none">
+                        <div class="absolute -inset-2 md:-inset-4 bg-gradient-to-tr from-eco-accent/20 to-transparent rounded-[2rem] transform rotate-3 -z-10 transition-transform group-hover:rotate-6"></div>
+                        <div class="image-container bg-white p-2">
+                            <img id="img-vector-1" src="TU_IMAGEN_DIGITAL.jpg" alt="Celulares y redes" class="w-full h-[250px] sm:h-[350px] md:h-[420px] object-cover rounded-xl" onerror="this.src='https://placehold.co/1000x800/e2e8f0/4a5d23?text=IMAGEN+1+(Digital)'">
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 order-2 md:order-none px-2 md:px-0">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-6 md:w-8 h-1 bg-eco-accent rounded-full"></div>
+                            <span class="text-eco-accent font-black tracking-widest uppercase text-xs md:text-sm">Vector 01</span>
+                        </div>
+                        <h3 class="font-display text-3xl md:text-5xl font-black mb-3 text-eco-dark group-hover:text-eco-accent transition-colors">El Vicio Digital</h3>
+                        <h4 class="text-lg md:text-xl font-bold text-gray-500 mb-4 bg-gray-100 inline-block px-3 py-1 rounded">Tu pantalla contamina</h4>
+                        <p class="text-base md:text-lg leading-relaxed text-gray-700">
+                            Tus horas en TikTok, el streaming en 4K y las miles de fotos inútiles en tu carrete no flotan en el aire mágico. Consumen electricidad masiva de servidores gigantes que queman combustibles fósiles 24/7. Estás calentando el planeta desde tu cama.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Vector 2: Fast Fashion -->
+                <section class="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-16 reveal group">
+                    <div class="w-full md:w-1/2 relative order-1 md:order-none">
+                        <div class="absolute -inset-2 md:-inset-4 bg-gradient-to-tl from-eco-alert/20 to-transparent rounded-[2rem] transform -rotate-3 -z-10 transition-transform group-hover:-rotate-6"></div>
+                        <div class="image-container bg-white p-2 border border-red-100">
+                            <img id="img-vector-2" src="TU_IMAGEN_ROPA.jpg" alt="Ropa amontonada" class="w-full h-[250px] sm:h-[350px] md:h-[420px] object-cover rounded-xl" onerror="this.src='https://placehold.co/1000x800/e2e8f0/d9534f?text=IMAGEN+2+(Ropa)'">
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 text-left md:text-right flex flex-col items-start md:items-end order-2 md:order-none px-2 md:px-0">
+                        <div class="flex items-center gap-3 mb-3 flex-row-reverse md:flex-row">
+                            <span class="text-eco-alert font-black tracking-widest uppercase text-xs md:text-sm">Vector 02</span>
+                            <div class="w-6 md:w-8 h-1 bg-eco-alert rounded-full"></div>
+                        </div>
+                        <h3 class="font-display text-3xl md:text-5xl font-black mb-3 text-eco-dark group-hover:text-eco-alert transition-colors">Los Hauls Tóxicos</h3>
+                        <h4 class="text-lg md:text-xl font-bold text-gray-500 mb-4 bg-red-50 inline-block px-3 py-1 rounded">Moda de usar y botar</h4>
+                        <p class="text-base md:text-lg leading-relaxed text-gray-700">
+                            Esa ropa barata que pides por internet, que usas para una sola fiesta y luego botas, requiere miles de litros de agua dulce. Estás pagando $5 por lucir bien hoy, secando los ríos que vas a necesitar mañana. Tu "outfit" es una catástrofe.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Vector 3: Plástico -->
+                <section class="flex flex-col md:flex-row items-center gap-8 md:gap-16 reveal group">
+                    <div class="w-full md:w-1/2 relative order-1 md:order-none">
+                        <div class="absolute -inset-2 md:-inset-4 bg-gradient-to-tr from-eco-accent/20 to-transparent rounded-[2rem] transform rotate-3 -z-10 transition-transform group-hover:rotate-6"></div>
+                        <div class="image-container bg-white p-2">
+                            <img id="img-vector-3" src="TU_IMAGEN_PLASTICO.jpg" alt="Plástico en la cafetería" class="w-full h-[250px] sm:h-[350px] md:h-[420px] object-cover rounded-xl" onerror="this.src='https://placehold.co/1000x800/e2e8f0/4a5d23?text=IMAGEN+3+(Plástico)'">
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 order-2 md:order-none px-2 md:px-0">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-6 md:w-8 h-1 bg-eco-accent rounded-full"></div>
+                            <span class="text-eco-accent font-black tracking-widest uppercase text-xs md:text-sm">Vector 03</span>
+                        </div>
+                        <h3 class="font-display text-3xl md:text-5xl font-black mb-3 text-eco-dark group-hover:text-eco-accent transition-colors">El Recreo de Plástico</h3>
+                        <h4 class="text-lg md:text-xl font-bold text-gray-500 mb-4 bg-gray-100 inline-block px-3 py-1 rounded">Comodidad venenosa</h4>
+                        <p class="text-base md:text-lg leading-relaxed text-gray-700">
+                            Botellas, funditas y envases de un solo uso en tu cafetería. Ese plástico se desintegra en microplásticos, termina en los océanos, en los peces y adivina... regresa a tu plato. Literalmente te estás comiendo tu propia basura.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Vector 4: E-waste -->
+                <section class="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-16 reveal group">
+                    <div class="w-full md:w-1/2 relative order-1 md:order-none">
+                        <div class="absolute -inset-2 md:-inset-4 bg-gradient-to-tl from-gray-800/20 to-transparent rounded-[2rem] transform -rotate-3 -z-10 transition-transform group-hover:-rotate-6"></div>
+                        <div class="image-container bg-white p-2 border border-gray-200">
+                            <img id="img-vector-4" src="TU_IMAGEN_EWASTE.jpg" alt="Basura electrónica" class="w-full h-[250px] sm:h-[350px] md:h-[420px] object-cover rounded-xl" onerror="this.src='https://placehold.co/1000x800/e2e8f0/1a1a1a?text=IMAGEN+4+(E-waste)'">
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 text-left md:text-right flex flex-col items-start md:items-end order-2 md:order-none px-2 md:px-0">
+                        <div class="flex items-center gap-3 mb-3 flex-row-reverse md:flex-row">
+                            <span class="text-gray-800 font-black tracking-widest uppercase text-xs md:text-sm">Vector 04</span>
+                            <div class="w-6 md:w-8 h-1 bg-gray-800 rounded-full"></div>
+                        </div>
+                        <h3 class="font-display text-3xl md:text-5xl font-black mb-3 text-eco-dark group-hover:text-gray-700 transition-colors">El Ego del "Pro Max"</h3>
+                        <h4 class="text-lg md:text-xl font-bold text-gray-500 mb-4 bg-gray-200 inline-block px-3 py-1 rounded">Obsolescencia por status</h4>
+                        <p class="text-base md:text-lg leading-relaxed text-gray-700">
+                            Cambiar tu celular o consola que aún funciona solo por tener el modelo nuevo genera "e-waste". Baterías viejas derraman ácido y plomo que envenenan comunidades enteras en otros países. Tu necesidad de status cuesta vidas.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Vector 5: Vapes (NUEVO) -->
+                <section class="flex flex-col md:flex-row items-center gap-8 md:gap-16 reveal group">
+                    <div class="w-full md:w-1/2 relative order-1 md:order-none">
+                        <div class="absolute -inset-2 md:-inset-4 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-[2rem] transform rotate-3 -z-10 transition-transform group-hover:rotate-6"></div>
+                        <div class="image-container bg-white p-2 border border-purple-100">
+                            <img id="img-vector-5" src="TU_IMAGEN_VAPES.jpg" alt="Vapes desechados" class="w-full h-[250px] sm:h-[350px] md:h-[420px] object-cover rounded-xl" onerror="this.src='https://placehold.co/1000x800/e2e8f0/8b5cf6?text=IMAGEN+5+(Vapes)'">
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 order-2 md:order-none px-2 md:px-0">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-6 md:w-8 h-1 bg-purple-500 rounded-full"></div>
+                            <span class="text-purple-600 font-black tracking-widest uppercase text-xs md:text-sm">Vector 05</span>
+                        </div>
+                        <h3 class="font-display text-3xl md:text-5xl font-black mb-3 text-eco-dark group-hover:text-purple-600 transition-colors">El Humo de Litio</h3>
+                        <h4 class="text-lg md:text-xl font-bold text-gray-500 mb-4 bg-purple-50 inline-block px-3 py-1 rounded text-purple-800">Cáncer y Baterías</h4>
+                        <p class="text-base md:text-lg leading-relaxed text-gray-700">
+                            Los "vapes" desechables no son solo humo saborizado. Cada uno contiene plástico duro, químicos tóxicos y una batería de litio perfectamente funcional que va directo a la basura. Fumar eso no te hace ver mayor, te hace responsable de tirar metales raros al vertedero semanalmente.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Vector 6: Greenwashing / Termos Aesthetic (NUEVO) -->
+                <section class="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-16 reveal group">
+                    <div class="w-full md:w-1/2 relative order-1 md:order-none">
+                        <div class="absolute -inset-2 md:-inset-4 bg-gradient-to-tl from-teal-500/20 to-transparent rounded-[2rem] transform -rotate-3 -z-10 transition-transform group-hover:-rotate-6"></div>
+                        <div class="image-container bg-white p-2 border border-teal-100">
+                            <img id="img-vector-6" src="TU_IMAGEN_TERMOS.jpg" alt="Colección de termos Stanley" class="w-full h-[250px] sm:h-[350px] md:h-[420px] object-cover rounded-xl" onerror="this.src='https://placehold.co/1000x800/e2e8f0/14b8a6?text=IMAGEN+6+(Termos/Trend)'">
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 text-left md:text-right flex flex-col items-start md:items-end order-2 md:order-none px-2 md:px-0">
+                        <div class="flex items-center gap-3 mb-3 flex-row-reverse md:flex-row">
+                            <span class="text-teal-600 font-black tracking-widest uppercase text-xs md:text-sm">Vector 06</span>
+                            <div class="w-6 md:w-8 h-1 bg-teal-500 rounded-full"></div>
+                        </div>
+                        <h3 class="font-display text-3xl md:text-5xl font-black mb-3 text-eco-dark group-hover:text-teal-600 transition-colors">El Síndrome Aesthetic</h3>
+                        <h4 class="text-lg md:text-xl font-bold text-gray-500 mb-4 bg-teal-50 inline-block px-3 py-1 rounded text-teal-800">Falsa consciencia</h4>
+                        <p class="text-base md:text-lg leading-relaxed text-gray-700">
+                            Tener 5 termos <em>Stanley</em> o <em>Yeti</em> de diferentes colores no te hace ecologista, te hace víctima del marketing. Fabricar un termo de acero requiere tanta energía que necesitas usarlo 500 veces para empatar con una botella de plástico. Coleccionarlos anula el propósito. Reutilizar no es comprar más, es usar lo que ya tienes.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Vector 7: Desperdicio de Alimentos (NUEVO) -->
+                <section class="flex flex-col md:flex-row items-center gap-8 md:gap-16 reveal group">
+                    <div class="w-full md:w-1/2 relative order-1 md:order-none">
+                        <div class="absolute -inset-2 md:-inset-4 bg-gradient-to-tr from-yellow-500/20 to-transparent rounded-[2rem] transform rotate-3 -z-10 transition-transform group-hover:rotate-6"></div>
+                        <div class="image-container bg-white p-2 border border-yellow-100">
+                            <img id="img-vector-7" src="TU_IMAGEN_COMIDA.jpg" alt="Comida desperdiciada" class="w-full h-[250px] sm:h-[350px] md:h-[420px] object-cover rounded-xl" onerror="this.src='https://placehold.co/1000x800/e2e8f0/eab308?text=IMAGEN+7+(Comida)'">
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 order-2 md:order-none px-2 md:px-0">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-6 md:w-8 h-1 bg-yellow-500 rounded-full"></div>
+                            <span class="text-yellow-600 font-black tracking-widest uppercase text-xs md:text-sm">Vector 07</span>
+                        </div>
+                        <h3 class="font-display text-3xl md:text-5xl font-black mb-3 text-eco-dark group-hover:text-yellow-500 transition-colors">Comida para el Story</h3>
+                        <h4 class="text-lg md:text-xl font-bold text-gray-500 mb-4 bg-yellow-50 inline-block px-3 py-1 rounded text-yellow-800">Basura en tu plato</h4>
+                        <p class="text-base md:text-lg leading-relaxed text-gray-700">
+                            Pedir muchísima comida para que se vea bien en la foto y luego botar la mitad. La comida que se pudre en los vertederos sin oxígeno genera gas metano, que es 25 veces más potente que el CO2 para calentar el planeta. Tu likes calientan la atmósfera.
+                        </p>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+        <!-- SECCIÓN: NÚMEROS ANIMADOS DEL DESASTRE -->
+        <section class="w-full bg-eco-dark py-20 md:py-32 relative text-white border-y-8 border-eco-alert overflow-hidden">
+            <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000); background-position: 0 0, 10px 10px; background-size: 20px 20px;"></div>
+            
+            <div class="max-w-6xl mx-auto px-4 md:px-6 relative z-10 text-center">
+                <h2 class="font-display text-4xl md:text-6xl font-black mb-4 text-eco-alert uppercase tracking-widest animate-pulse">Los Datos No Mienten</h2>
+                <p class="text-gray-400 text-lg md:text-2xl mb-16">Estadísticas reales de nuestro comportamiento anual.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="counters-section">
+                    <div class="counter-box p-8 rounded-3xl transform hover:scale-105 transition-transform border border-white/5">
+                        <div class="font-display text-5xl md:text-7xl font-black text-white mb-2"><span class="counter" data-target="50">0</span>M</div>
+                        <div class="text-eco-accent font-bold uppercase tracking-wider text-sm">Toneladas de E-Waste al año</div>
+                    </div>
+                    <div class="counter-box p-8 rounded-3xl transform hover:scale-105 transition-transform border border-white/5">
+                        <div class="font-display text-5xl md:text-7xl font-black text-white mb-2"><span class="counter" data-target="2700">0</span></div>
+                        <div class="text-eco-alert font-bold uppercase tracking-wider text-sm">Litros de agua por una camiseta</div>
+                    </div>
+                    <div class="counter-box p-8 rounded-3xl transform hover:scale-105 transition-transform border border-white/5">
+                        <div class="font-display text-5xl md:text-7xl font-black text-white mb-2"><span class="counter" data-target="400">0</span></div>
+                        <div class="text-gray-400 font-bold uppercase tracking-wider text-sm">Años tarda en degradarse tu vaso de café</div>
+                    </div>
+                    <div class="counter-box p-8 rounded-3xl transform hover:scale-105 transition-transform border border-white/5">
+                        <div class="font-display text-5xl md:text-7xl font-black text-white mb-2"><span class="counter" data-target="30">0</span>%</div>
+                        <div class="text-yellow-500 font-bold uppercase tracking-wider text-sm">De toda la comida producida se tira a la basura</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: MITOS VS REALIDAD (Tarjetas Flip) -->
+        <section class="max-w-6xl mx-auto px-4 md:px-6 py-20 md:py-32 reveal">
+            <div class="text-center mb-16">
+                <span class="uppercase tracking-widest text-eco-accent font-black text-sm mb-3 block">— Deja de creerte esto —</span>
+                <h2 class="font-display text-4xl md:text-5xl font-black text-eco-dark tracking-tight">Mito vs Realidad</h2>
+                <p class="text-gray-600 text-lg mt-4">Haz clic o pasa el cursor sobre las tarjetas para revelar la verdad incómoda.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Tarjeta 1 -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3 class="font-display text-3xl font-black text-gray-400 mb-2">MITO 01</h3>
+                            <p class="font-bold text-xl md:text-2xl">"Reciclar mi botella de plástico salva el mundo."</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-display text-2xl font-black text-eco-alert mb-2">REALIDAD</h3>
+                            <p class="text-lg">Solo el <strong>9%</strong> de todo el plástico fabricado en la historia se ha reciclado. El resto está enterrado, quemado o en el mar. La única solución es dejar de comprarlo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2 -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3 class="font-display text-3xl font-black text-gray-400 mb-2">MITO 02</h3>
+                            <p class="font-bold text-xl md:text-2xl">"Borrar correos salva el planeta."</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-display text-2xl font-black text-eco-alert mb-2">REALIDAD</h3>
+                            <p class="text-lg">Ayuda, pero muy poco. Lo que realmente consume energía masiva en la nube es <strong>el streaming de videos en HD</strong> y el entrenamiento de Inteligencias Artificiales.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3 -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3 class="font-display text-3xl font-black text-gray-400 mb-2">MITO 03</h3>
+                            <p class="font-bold text-xl md:text-2xl">"Donar mi ropa usada compensa lo mucho que compro."</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-display text-2xl font-black text-eco-alert mb-2">REALIDAD</h3>
+                            <p class="text-lg">La mayoría de la ropa donada termina en vertederos gigantescos en África o el desierto de Atacama (Chile), envenenando el suelo. Comprar menos es la única salida.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 4 -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3 class="font-display text-3xl font-black text-gray-400 mb-2">MITO 04</h3>
+                            <p class="font-bold text-xl md:text-2xl">"No importa lo que yo haga, el problema son las grandes empresas."</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-display text-2xl font-black text-eco-alert mb-2">REALIDAD</h3>
+                            <p class="text-lg">Las empresas producen porque tú compras. Eres el jefe de la demanda. Cada dólar que gastas en basura es un voto para que sigan destruyendo todo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Forma SVG divisoria tipo "Ola" -->
+        <div class="w-full overflow-hidden leading-none text-eco-dark">
+            <svg class="relative block w-[calc(100%+1.3px)] h-[50px] md:h-[100px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,115.5,188.44,110.85c52.4-4.22,104.9-13.6,155-29.35C335.71,78.58,328.45,67.6,321.39,56.44Z" fill="currentColor"></path>
+            </svg>
+        </div>
+
+        <!-- Sección de OPCIONES INTERACTIVAS (Oscura) -->
+        <section class="bg-eco-dark text-white pt-10 pb-24 md:pt-16 md:pb-32 relative overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.05) 1.5px, transparent 1.5px); background-size: 30px 30px;"></div>
+            <div class="absolute -top-40 -right-40 w-[500px] h-[500px] bg-eco-accent rounded-full opacity-20 blur-[100px] pointer-events-none"></div>
+            <div class="absolute bottom-0 -left-20 w-[400px] h-[400px] bg-eco-alert rounded-full opacity-10 blur-[80px] pointer-events-none"></div>
+            
+            <div class="max-w-6xl mx-auto px-4 md:px-6 relative z-10 reveal">
+                <h2 class="font-display text-4xl md:text-6xl font-black mb-4 tracking-tight text-center md:text-left">El peso de tus decisiones</h2>
+                <p class="text-gray-300 mb-10 md:mb-16 text-base md:text-xl max-w-2xl text-center md:text-left mx-auto md:mx-0">
+                    No te hagas el loco. Tu día a día es lo que suma. ¿Qué harías tú en estas situaciones reales?
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                    
+                    <!-- Escenario 1 -->
+                    <div class="glass-dark p-6 md:p-8 rounded-[2rem] relative overflow-hidden group shadow-2xl">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-eco-accent transform scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300"></div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-white/10 text-white font-bold px-3 py-1 rounded-full text-xs tracking-wider">SITUACIÓN 1</span>
+                        </div>
+                        <h4 class="font-bold text-2xl md:text-3xl mb-2">Fiesta el fin de semana</h4>
+                        <p class="text-gray-400 mb-6 text-sm md:text-base">No tienes "nada que ponerte" y quieres subir fotos a redes.</p>
+                        
+                        <div class="flex flex-col gap-3 md:gap-4 mb-4">
+                            <button onclick="selectOption('escenario1', 'malo', this)" class="option-btn w-full py-4 px-4 md:px-5 border border-white/10 bg-white/5 rounded-2xl text-left font-bold text-sm md:text-base hover:border-eco-alert hover:bg-eco-alert/20">
+                                ❌ Pedir un outfit de internet barato
+                            </button>
+                            <button onclick="selectOption('escenario1', 'bueno', this)" class="option-btn w-full py-4 px-4 md:px-5 border border-white/10 bg-white/5 rounded-2xl text-left font-bold text-sm md:text-base hover:border-eco-accent hover:bg-eco-accent/20">
+                                ✅ Reusar, combinar distinto o pedir prestado
+                            </button>
+                        </div>
+                        <div id="resultado-escenario1" class="hidden p-5 rounded-2xl text-sm md:text-base transition-all duration-300 font-medium"></div>
+                    </div>
+
+                    <!-- Escenario 2 -->
+                    <div class="glass-dark p-6 md:p-8 rounded-[2rem] relative overflow-hidden group shadow-2xl">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-eco-alert transform scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300"></div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-white/10 text-white font-bold px-3 py-1 rounded-full text-xs tracking-wider">SITUACIÓN 2</span>
+                        </div>
+                        <h4 class="font-bold text-2xl md:text-3xl mb-2">Sed en el recreo</h4>
+                        <p class="text-gray-400 mb-6 text-sm md:text-base">Hiciste deporte, mueres de sed y vas a la cafetería.</p>
+                        
+                        <div class="flex flex-col gap-3 md:gap-4 mb-4">
+                            <button onclick="selectOption('escenario2', 'malo', this)" class="option-btn w-full py-4 px-4 md:px-5 border border-white/10 bg-white/5 rounded-2xl text-left font-bold text-sm md:text-base hover:border-eco-alert hover:bg-eco-alert/20">
+                                ❌ Comprar botellas de agua plásticas
+                            </button>
+                            <button onclick="selectOption('escenario2', 'bueno', this)" class="option-btn w-full py-4 px-4 md:px-5 border border-white/10 bg-white/5 rounded-2xl text-left font-bold text-sm md:text-base hover:border-eco-accent hover:bg-eco-accent/20">
+                                ✅ Llenar tu termo de metal reutilizable
+                            </button>
+                        </div>
+                        <div id="resultado-escenario2" class="hidden p-5 rounded-2xl text-sm md:text-base transition-all duration-300 font-medium"></div>
+                    </div>
+
+                    <!-- Escenario 3 (Nuevo) -->
+                    <div class="glass-dark p-6 md:p-8 rounded-[2rem] relative overflow-hidden group shadow-2xl">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-yellow-500 transform scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300"></div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-white/10 text-white font-bold px-3 py-1 rounded-full text-xs tracking-wider">SITUACIÓN 3</span>
+                        </div>
+                        <h4 class="font-bold text-2xl md:text-3xl mb-2">Ir a un lugar cerca</h4>
+                        <p class="text-gray-400 mb-6 text-sm md:text-base">Tienes que ir a unas 5 cuadras de distancia de tu casa o escuela.</p>
+                        
+                        <div class="flex flex-col gap-3 md:gap-4 mb-4">
+                            <button onclick="selectOption('escenario3', 'malo', this)" class="option-btn w-full py-4 px-4 md:px-5 border border-white/10 bg-white/5 rounded-2xl text-left font-bold text-sm md:text-base hover:border-eco-alert hover:bg-eco-alert/20">
+                                ❌ Pedir un Uber porque "qué pereza caminar"
+                            </button>
+                            <button onclick="selectOption('escenario3', 'bueno', this)" class="option-btn w-full py-4 px-4 md:px-5 border border-white/10 bg-white/5 rounded-2xl text-left font-bold text-sm md:text-base hover:border-yellow-500 hover:bg-yellow-500/20">
+                                ✅ Irte caminando o sacar la bicicleta
+                            </button>
+                        </div>
+                        <div id="resultado-escenario3" class="hidden p-5 rounded-2xl text-sm md:text-base transition-all duration-300 font-medium"></div>
+                    </div>
+
+                    <!-- Escenario 4 (Nuevo) -->
+                    <div class="glass-dark p-6 md:p-8 rounded-[2rem] relative overflow-hidden group shadow-2xl">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-purple-500 transform scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300"></div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-white/10 text-white font-bold px-3 py-1 rounded-full text-xs tracking-wider">SITUACIÓN 4</span>
+                        </div>
+                        <h4 class="font-bold text-2xl md:text-3xl mb-2">Presión Social</h4>
+                        <p class="text-gray-400 mb-6 text-sm md:text-base">Todos tus amigos traen un vape desechable nuevo súper colorido.</p>
+                        
+                        <div class="flex flex-col gap-3 md:gap-4 mb-4">
+                            <button onclick="selectOption('escenario4', 'malo', this)" class="option-btn w-full py-4 px-4 md:px-5 border border-white/10 bg-white/5 rounded-2xl text-left font-bold text-sm md:text-base hover:border-eco-alert hover:bg-eco-alert/20">
+                                ❌ Comprar uno para no quedarte atrás
+                            </button>
+                            <button onclick="selectOption('escenario4', 'bueno', this)" class="option-btn w-full py-4 px-4 md:px-5 border border-white/10 bg-white/5 rounded-2xl text-left font-bold text-sm md:text-base hover:border-purple-500 hover:bg-purple-500/20">
+                                ✅ Pasar de la moda tóxica y cuidar tus pulmones (y el planeta)
+                            </button>
+                        </div>
+                        <div id="resultado-escenario4" class="hidden p-5 rounded-2xl text-sm md:text-base transition-all duration-300 font-medium"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- DINÁMICA: TERMÓMETRO DE HIPOCRESÍA EXTENDIDO -->
+        <section class="max-w-5xl mx-auto px-4 md:px-6 py-16 md:py-24 reveal relative z-20">
+            <div class="glass-card p-8 md:p-12 rounded-[2.5rem] border-t-8 border-eco-alert relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
+                <div class="absolute top-0 right-4 md:right-8 bg-eco-alert text-white font-black text-xs md:text-sm px-4 md:px-6 py-2 rounded-b-xl tracking-widest uppercase shadow-md">
+                    Test de Impacto Crudo
+                </div>
+                
+                <h3 class="font-display text-4xl md:text-5xl font-black text-eco-dark mb-3 mt-4">El Termómetro de Hipocresía</h3>
+                <p class="text-gray-600 font-bold text-lg md:text-xl mb-10">Selecciona tu realidad en estas 5 situaciones. Sé honesto, a nosotros puedes mentirnos, pero la basura igual se acumula.</p>
+
+                <div class="space-y-10">
+                    <!-- Pregunta 1 -->
+                    <div>
+                        <p class="font-black text-xl md:text-2xl text-eco-dark mb-4">1. Sale el nuevo celular de moda. Tú:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(1, 1, this)">Lo ignoro, el mío todavía funciona perfecto.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(1, 2, this)">Sufro en silencio porque lo quiero, pero ando quebrado.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(1, 3, this)">Hago berrinche o me endeudo hasta que lo consigo.</button>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div>
+                        <p class="font-black text-xl md:text-2xl text-eco-dark mb-4">2. Vas a desayunar a la cafetería. Tú:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(2, 1, this)">Llevo mi propio vaso y envase de mi casa.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(2, 2, this)">Agarro lo que me den, me da igual el empaque.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(2, 3, this)">Pido triple funda plástica "por si acaso" se me cae.</button>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div>
+                        <p class="font-black text-xl md:text-2xl text-eco-dark mb-4">3. ¿Qué haces con tu ropa cuando pasa de moda?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(3, 1, this)">La dono, la rediseño o la regalo a alguien.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(3, 2, this)">Se queda pudriéndose en el hoyo negro de mi clóset.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(3, 3, this)">A la basura directamente, ya no sirve para las fotos.</button>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div>
+                        <p class="font-black text-xl md:text-2xl text-eco-dark mb-4">4. Ves una botella/termo que se hizo viral en TikTok. Tú:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(4, 1, this)">Paso, ya tengo un termo en casa que sirve.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(4, 2, this)">Lo compro, pero juro que lo voy a usar mucho.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(4, 3, this)">Lo compro en 3 colores distintos para combinar el outfit.</button>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 5 -->
+                    <div>
+                        <p class="font-black text-xl md:text-2xl text-eco-dark mb-4">5. Compartes un post de tortugas ahogándose en plástico. Después:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(5, 1, this)">Intento cambiar mis hábitos realmente esa misma semana.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(5, 2, this)">Me siento mal por 5 minutos y luego se me olvida.</button>
+                            <button class="quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left" onclick="selectQuiz(5, 3, this)">Pido un frappé en vaso plástico con sorbete mientras subo la historia.</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <button id="quiz-btn-submit" onclick="showQuizResult()" class="bg-eco-dark text-white font-black text-lg md:text-xl uppercase tracking-widest px-8 md:px-12 py-4 rounded-full hover:bg-eco-accent transition-all transform hover:scale-105 shadow-xl">
+                        Ver mi diagnóstico
+                    </button>
+                </div>
+
+                <!-- Contenedor del resultado -->
+                <div id="quiz-result" class="hidden opacity-0"></div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: EL BOTIQUÍN DE EMERGENCIA (Soluciones) -->
+        <section class="w-full bg-white border-y-8 border-eco-accent py-20 md:py-32 reveal">
+            <div class="max-w-6xl mx-auto px-4 md:px-6">
+                <h2 class="font-display text-4xl md:text-6xl font-black text-eco-dark tracking-tight mb-4 text-center">El Botiquín de Emergencia</h2>
+                <p class="text-gray-600 text-lg md:text-xl text-center mb-16 max-w-2xl mx-auto">Ya te tiramos la realidad a la cara. Ahora, esto es lo mínimo que puedes hacer para dejar de ser parte del problema.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gray-50 p-8 rounded-3xl border border-gray-200 hover:shadow-xl transition-shadow">
+                        <div class="text-4xl mb-4">📵</div>
+                        <h3 class="font-bold text-2xl mb-3">Hackea la Obsolescencia</h3>
+                        <p class="text-gray-600">No cambies de equipo si el tuyo funciona. Repara las pantallas rotas. Borra las fotos repetidas y date de baja de correos inútiles. La nube no es infinita.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-3xl border border-gray-200 hover:shadow-xl transition-shadow">
+                        <div class="text-4xl mb-4">👕</div>
+                        <h3 class="font-bold text-2xl mb-3">Normaliza Repetir Ropa</h3>
+                        <p class="text-gray-600">Las Kardashian no te están viendo. Usa lo que tienes, intercambia con amigos o compra en tiendas de segunda mano. Bloquea las apps de fast fashion de tu celular.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-3xl border border-gray-200 hover:shadow-xl transition-shadow">
+                        <div class="text-4xl mb-4">🎒</div>
+                        <h3 class="font-bold text-2xl mb-3">Kit de Supervivencia</h3>
+                        <p class="text-gray-600">Tu termo de agua, una bolsa de tela metida en la mochila y decir "NO, gracias" cuando te den fundas plásticas para una goma de mascar. Así de simple.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Arquitectura del Futuro / Cierre -->
+        <section class="max-w-4xl mx-auto px-4 md:px-6 py-20 md:py-32 reveal text-center relative bg-f8f9fa">
+            <div class="absolute top-10 left-1/2 transform -translate-x-1/2 w-16 h-16 md:w-24 md:h-24 border-4 border-eco-accent/20 rounded-full animate-ping" style="animation-duration: 3s;"></div>
+
+            <h2 class="font-display text-4xl md:text-6xl lg:text-7xl font-black text-eco-dark mb-6 md:mb-10 tracking-tight relative z-10">
+                Menos charla, <br class="md:hidden"><span class="text-eco-accent">más acción.</span>
+            </h2>
+            <p class="text-gray-900 leading-relaxed text-lg md:text-2xl font-bold mb-10 md:mb-14 relative z-10 px-2">
+                Cortar con el consumismo ciego es la mayor protesta que nuestra generación puede hacer. El futuro no es un regalo, es algo que nos toca pelear. Y la pelea empieza con nosotros mismos.
+            </p>
+            
+            <div class="inline-block bg-eco-accent text-white px-8 md:px-12 py-4 md:py-5 rounded-full font-black text-base md:text-xl tracking-widest uppercase shadow-[0_15px_30px_rgba(74,93,35,0.4)] transform hover:-translate-y-2 hover:scale-105 transition-all cursor-default relative z-10">
+                La rebeldía es preservar
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer de EcoKeepers -->
+    <footer class="bg-eco-dark text-eco-light py-16 md:py-20 border-t-8 border-eco-accent relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none w-full text-center">
+            <span class="font-display font-black text-[15rem] md:text-[25rem] leading-none">EK</span>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-6 flex flex-col items-center text-center relative z-10">
+            <img src="image_1d43de.jpg" alt="EcoKeepers Footer" class="h-20 w-20 md:h-28 md:w-28 mb-6 rounded-full opacity-90 brightness-200 grayscale contrast-200 border-2 border-white/20 p-1 shadow-2xl" onerror="this.style.display='none'">
+            <h3 class="font-display tracking-[0.2em] text-2xl md:text-4xl mb-2 font-black uppercase">EcoKeepers</h3>
+            <p class="text-eco-accent font-bold tracking-[0.2em] md:tracking-[0.3em] mb-8 text-xs md:text-sm">SALVAR • CUIDAR • PRESERVAR</p>
+            
+            <div class="w-24 md:w-32 h-1 bg-white/20 rounded-full mb-8"></div>
+            
+            <p class="text-sm md:text-base text-gray-300 max-w-md font-bold mb-4">
+                No somos "el futuro", somos los que van a pagar la factura de su asquerosa comodidad. Se acabó la falsa moral ecológica. Un golpe en la cara de: <span class="text-eco-accent text-xl md:text-2xl block mt-3 uppercase tracking-[0.3em] font-black">4TO A TRIBUTARIA</span>
+            </p>
+            <p class="text-sm md:text-base text-gray-400 max-w-md font-medium">
+                Dejemos de quejarnos de los adultos si vamos a seguir destruyendo el mundo exactamente igual que ellos.
+            </p>
+            <p class="text-xs md:text-sm text-gray-500 mt-12 tracking-widest font-bold uppercase">&copy; 2026 EcoKeepers. El futuro está en tus manos.</p>
+        </div>
+    </footer>
+
+    <!-- Lógica Interactiva (Vanilla JS) -->
+    <script>
+        // Animación de Barra de Progreso de Lectura
+        window.onscroll = function() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+            reveal();
+        };
+
+        // Animación al hacer scroll (Reveal) mejorada
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = window.innerWidth < 768 ? 50 : 100; 
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        setTimeout(reveal, 100); 
+
+        // Lógica de Contadores Numéricos (Se activan al verlos)
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200; // Mientras menor, más rápido
+
+        const counterObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const counter = entry.target;
+                    const updateCount = () => {
+                        const target = +counter.getAttribute('data-target');
+                        const count = +counter.innerText;
+                        const inc = target / speed;
+                        if (count < target) {
+                            counter.innerText = Math.ceil(count + inc);
+                            setTimeout(updateCount, 15);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    updateCount();
+                    observer.unobserve(counter); // Animarlo solo una vez
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => {
+            counterObserver.observe(counter);
+        });
+
+        // Lógica de las opciones interactivas
+        const respuestas = {
+            escenario1: {
+                malo: "<strong class='text-red-300 block mb-2 text-lg'>Realidad Cruda:</strong> Financiaste talleres que explotan personas y agotaste miles de litros de agua dulce. Esa camisa se romperá rápido y terminará en un vertedero por 200 años.",
+                bueno: "<strong class='text-green-300 block mb-2 text-lg'>Realidad Cruda:</strong> ¡Eso es tener estilo y cerebro! Rompes la cadena. Nadie se va a fijar si repetiste ropa, pero el planeta sí siente el alivio."
+            },
+            escenario2: {
+                malo: "<strong class='text-red-300 block mb-2 text-lg'>Realidad Cruda:</strong> Creaste basura para una bebida que tomaste en 3 minutos. Ese plástico matará vida marina. Multiplica eso por todos tus días de clase.",
+                bueno: "<strong class='text-green-300 block mb-2 text-lg'>Realidad Cruda:</strong> Brutal. Cero basura generada. Llevar tu agua es literalmente lo más fácil que puedes hacer todos los días para no ser el problema."
+            },
+            escenario3: {
+                malo: "<strong class='text-yellow-300 block mb-2 text-lg'>Realidad Cruda:</strong> Por tu pereza quemaste combustible fósil, emitiste CO2 a la atmósfera y creaste tráfico para un tramo que podías hacer con tus propias piernas.",
+                bueno: "<strong class='text-yellow-300 block mb-2 text-lg'>Realidad Cruda:</strong> ¡Bien hecho! Cero emisiones. Además tu cuerpo te agradece el movimiento. Caminar no quita estatus, la vagancia sí quita futuro."
+            },
+            escenario4: {
+                malo: "<strong class='text-purple-300 block mb-2 text-lg'>Realidad Cruda:</strong> Te tragaste el marketing. Ese vape tiene una batería de litio que, cuando la tires a la basura, filtrará químicos tóxicos al suelo y agua subterránea. Todo por encajar.",
+                bueno: "<strong class='text-purple-300 block mb-2 text-lg'>Realidad Cruda:</strong> ¡Rebeldía pura! No necesitas envenenarte a ti ni a la tierra para verte interesante. Romper modas tóxicas es la verdadera consciencia."
+            }
+        };
+
+        function selectOption(escenario, tipo, btnElement) {
+            let buttons = btnElement.parentElement.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.classList.remove('selected', 'bg-white/10', 'border-white', 'shadow-[0_0_15px_rgba(255,255,255,0.2)]');
+                btn.classList.add('bg-white/5');
+            });
+
+            btnElement.classList.add('selected', 'bg-white/10', 'border-white', 'shadow-[0_0_15px_rgba(255,255,255,0.2)]');
+            btnElement.classList.remove('bg-white/5');
+            
+            let resultDiv = document.getElementById('resultado-' + escenario);
+            resultDiv.innerHTML = respuestas[escenario][tipo];
+            resultDiv.classList.remove('hidden');
+            
+            if(tipo === 'malo') {
+                resultDiv.className = 'mt-5 p-5 md:p-6 rounded-2xl border border-red-500/50 bg-red-900/30 text-white text-sm md:text-base transition-all duration-300 backdrop-blur-md shadow-inner';
+            } else {
+                resultDiv.className = 'mt-5 p-5 md:p-6 rounded-2xl border border-white/30 bg-white/10 text-white text-sm md:text-base transition-all duration-300 backdrop-blur-md shadow-inner';
+            }
+        }
+
+        // --- LÓGICA DEL TERMÓMETRO (TEST DE 5 PREGUNTAS) ---
+        let quizState = { q1: 0, q2: 0, q3: 0, q4: 0, q5: 0 };
+        let answered = { q1: false, q2: false, q3: false, q4: false, q5: false };
+
+        function selectQuiz(q, value, btn) {
+            answered['q' + q] = true;
+            quizState['q' + q] = value;
+            
+            let buttons = btn.parentElement.querySelectorAll('button');
+            buttons.forEach(b => {
+                b.className = "quiz-btn w-full border-2 border-gray-200 rounded-xl py-4 px-4 font-bold text-gray-700 bg-white hover:border-gray-400 transition-all text-sm md:text-base text-left";
+            });
+
+            if(value === 1) btn.className = "quiz-btn w-full border-2 border-green-500 rounded-xl py-4 px-4 font-bold text-green-900 bg-green-50 shadow-md transition-all text-sm md:text-base text-left transform scale-[1.02]";
+            if(value === 2) btn.className = "quiz-btn w-full border-2 border-yellow-500 rounded-xl py-4 px-4 font-bold text-yellow-900 bg-yellow-50 shadow-md transition-all text-sm md:text-base text-left transform scale-[1.02]";
+            if(value === 3) btn.className = "quiz-btn w-full border-2 border-red-500 rounded-xl py-4 px-4 font-bold text-red-900 bg-red-50 shadow-md transition-all text-sm md:text-base text-left transform scale-[1.02]";
+        }
+
+        function showQuizResult() {
+            let btn = document.getElementById('quiz-btn-submit');
+            
+            if(!answered.q1 || !answered.q2 || !answered.q3 || !answered.q4 || !answered.q5) {
+                btn.innerText = "⚠️ ¡RESPONDE LAS 5 PREGUNTAS!";
+                btn.classList.add('bg-eco-alert', 'animate-pulse');
+                setTimeout(() => {
+                    btn.innerText = "Ver mi diagnóstico";
+                    btn.classList.remove('bg-eco-alert', 'animate-pulse');
+                }, 2500);
+                return;
+            }
+
+            let total = quizState.q1 + quizState.q2 + quizState.q3 + quizState.q4 + quizState.q5;
+            let resultDiv = document.getElementById('quiz-result');
+            let title = "";
+            let desc = "";
+            let colorClass = "";
+
+            if(total <= 7) {
+                title = "🛡️ NIVEL: SOBREVIVIENTE (1% DE LA POBLACIÓN)";
+                desc = "Eres la excepción a la regla. Tienes criterio propio y no te dejas lavar el cerebro por las modas de TikTok o el 'fast fashion'. Si este planeta tiene alguna oportunidad de salvarse, es por gente como tú que hace en vez de hablar. Sigue así.";
+                colorClass = "bg-green-100 border-green-500 text-green-900";
+            } else if (total <= 12) {
+                title = "🤡 NIVEL: HIPÓCRITA PROMEDIO";
+                desc = "Te quejas del calor extremo pero sigues comprando ropa basura. Eres de los que sube posts ecológicos a Instagram desde un vaso desechable. Haces lo fácil, pero te falta sacrificio. Andas en automático, es hora de despertar de verdad.";
+                colorClass = "bg-yellow-100 border-yellow-500 text-yellow-900";
+            } else {
+                title = "☢️ NIVEL: PELIGRO BIOLÓGICO ANDANTE";
+                desc = "Felicidades, eres literalmente la razón por la que el planeta está colapsando. Tu necesidad de estatus, de encajar en las modas y tu completa pereza nos está costando el futuro a todos. Deja de dar likes y empieza a arreglar tu desastre.";
+                colorClass = "bg-red-100 border-red-500 text-red-900";
+            }
+
+            resultDiv.innerHTML = `<h4 class="font-black text-xl md:text-3xl mb-3">${title}</h4><p class="font-medium text-base md:text-lg">${desc}</p>`;
+            resultDiv.className = `mt-10 p-6 md:p-10 rounded-[2rem] border-l-8 border-r-8 ${colorClass} transition-all duration-700 opacity-100 transform translate-y-0 shadow-lg`;
+            resultDiv.classList.remove('hidden');
+
+            setTimeout(() => {
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+    </script>
+</body>
+</html>
